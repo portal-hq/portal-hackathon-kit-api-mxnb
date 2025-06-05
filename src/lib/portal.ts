@@ -368,16 +368,6 @@ export class PortalClient {
     amount: string,
     token: string
   ): Promise<SignTransactionResponse> {
-    console.log(
-      "transferAssets",
-      clientApiKey,
-      share,
-      chain,
-      to,
-      amount,
-      token
-    );
-
     const rpcUrl = getRpcUrlByChainId(chain);
     if (!rpcUrl) {
       throw new Error(`No RPC URL found for chain: ${chain}`);
@@ -409,7 +399,6 @@ export class PortalClient {
 
       return response.data;
     } catch (error) {
-      console.error("Error fetching wallet assets:", error);
       throw error;
     }
   }
@@ -441,6 +430,42 @@ export class PortalClient {
         throw new Error(`Failed to update wallet status: ${error.message}`);
       }
       throw new Error("Failed to update wallet status: Unknown error");
+    }
+  }
+
+  async fundWallet(
+    clientApiKey: string,
+    chainId: string,
+    token: string = "NATIVE",
+    amount: string = "0.1"
+  ): Promise<void> {
+    try {
+      const response = await this.clientApi.post(
+        "/me/fund",
+        {
+          chainId,
+          token,
+          amount,
+        },
+        {
+          headers: { Authorization: `Bearer ${clientApiKey}` },
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fund wallet");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(
+          `Failed to fund wallet: ${
+            error.response?.data?.message || error.message
+          }`
+        );
+      } else if (error instanceof Error) {
+        throw new Error(`Failed to fund wallet: ${error.message}`);
+      }
+      throw new Error("Failed to fund wallet: Unknown error");
     }
   }
 }

@@ -2,26 +2,24 @@
 
 # Portal Hackathon Kit - Enclave MPC API
 
-This repository shows you how you can easily integrate `CELO` into a Next.js server-side application using the [Portal Enclave MPC API](https://docs.portalhq.io/guides/enclave-mpc-api) for either an API or web app. It covers the following features.
+This repository shows you how you can easily integrate `MXNB` into a Next.js server-side application using the [Portal Enclave MPC API](https://docs.portalhq.io/guides/enclave-mpc-api) for either an API or web app. It covers the following features.
 
 1. Generate a wallet.
 2. Fetch and display balances.
-3. Fund wallet with CELO on Celo Alfajores Testnet.
-4. Transfer tokens.
+3. Fund wallet with `MXNB` on Arbitrum Sepolia.
+4. Transfer tokens to a given recipient address.
 
 ## How to Run This Example App
 
 1. Clone the repo to your local system
-2. Open the project in your editor of choice.
-3. Run `yarn` to install dependencies.
-4. Go to your Portal Dashboard [settings page](https://app.portalhq.io/settings#client-api-keys) and create a Portal API key.
-5. Create a copy of `.env.example` to `.env.local` and paste the Portal API key.
-6. Run `yarn dev` to start the application.
+2. Go to your Portal Dashboard [Settings page](https://app.portalhq.io/settings#client-api-keys) and create a Custodian API Key
+3. Create a copy of `.env.example` to `.env.local` and paste the api key into it.
+4. Run `yarn && yarn dev` to install dependencies and start the application.
 
 Once the application has started you can either:
 
-1. Go to `localhost:3000` to see the web application.
-2. Start sending requests to the API directly.
+- Go to `localhost:3000` to see the accompanying web application.
+- Start sending requests to the API directly.
 
 Here are some example cURL commands to test the API endpoints:
 
@@ -84,13 +82,9 @@ The application demonstrates three core Portal Enclave MPC API features:
 
 ## Faucets for Testing
 
-You can get more `CELO` tokens for testing with the below faucet.
+You can get more `MXNB` tokens for testing with the below faucet.
 
-- [Alfajores Testnet Faucet](https://faucet.celo.org/alfajores) - Get testnet CELO tokens
-
-If you need tokens other than `CELO`, we recommend getting testnet `CELO` and swapping them via Mento's DEX:
-
-- [Mento App](https://app.mento.org/) - Swap between `CELO`, `cUSD`, `USDC`, `USDT`, and more
+- [Juno Faucet](https://buildwithjuno.com/en-US/faucet) - Get testnet MXNB tokens
 
 ## Portal Documentation
 
@@ -112,14 +106,22 @@ Portal supplies several additional APIs for simplifying your development.
 - [Build a Transaction - Send Asset](https://docs.portalhq.io/reference/client-api/v3-endpoints#build-a-send-asset-transaction): This endpoint builds a formatted transaction to send a fungible asset (native, ERC-20, and SPL tokens) for a given chain.
 - [Evaluate a Transaction](https://docs.portalhq.io/reference/client-api/v3-endpoints#evaluate-a-transaction): This endpoint can simulate a transaction and/or scan a transaction for security concerns.
 
-### CELO Documentation
+### `MXNB` Documentation
 
-- [Celo Docs](https://docs.celo.org/) - Official Celo documentation
-- [Mento Protocol](https://www.mento.org/) - Celo's stablecoin protocol
+- [Juno Docs](https://buildwithjuno.com/en-US) - Official Juno website
 
 ### Other Helpful Resources
 
 - [What is Portal MPC?](https://docs.portalhq.io/resources/portals-mpc-architecture)
+
+## Contributing
+
+We welcome contributions to improve this example app! To contribute:
+
+1. Fork the repository
+2. Create a new branch for your feature
+3. Add your changes
+4. Submit a pull request
 
 ## Help
 

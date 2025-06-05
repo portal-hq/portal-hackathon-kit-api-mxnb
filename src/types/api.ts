@@ -154,6 +154,7 @@ export const CHAINS: Chain[] = [
   { id: "fantom", name: "Fantom", chainId: "eip155:250" },
   { id: "moonbeam", name: "Moonbeam", chainId: "eip155:1284" },
   { id: "arbitrum", name: "Arbitrum Mainnet", chainId: "eip155:42161" },
+  { id: "arbitrum-sepolia", name: "Arbitrum Sepolia", chainId: "eip155:421614" },
   { id: "avalanche", name: "Avalanche Mainnet", chainId: "eip155:43114" },
   { id: "linea", name: "Linea Mainnet", chainId: "eip155:59144" },
   { id: "celo", name: "Celo", chainId: "eip155:42220" },

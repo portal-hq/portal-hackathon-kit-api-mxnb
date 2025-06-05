@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import type { Wallet } from "@/types/api";
 import WalletAssets from "./WalletAssets";
+import { CHAIN_CONFIGS } from "@/lib/chains";
 
 export default function WalletList() {
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [funding, setFunding] = useState(false);
   const [expandedWalletId, setExpandedWalletId] = useState<string | null>(null);
+  const [selectedChain] = useState<string>(CHAIN_CONFIGS[1].chainId);
 
   const fetchWallets = async () => {
     setLoading(true);
@@ -55,6 +58,34 @@ export default function WalletList() {
     }
   };
 
+  const handleFund = async (walletId: string) => {
+    setFunding(true);
+    try {
+      const response = await fetch("/api/wallets/fund", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientId: walletId,
+          chainId: selectedChain,
+        }),
+      });
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || "Failed to fund wallet");
+      }
+
+      // Refresh the wallet list after successful funding
+      await fetchWallets();
+    } catch (error) {
+      console.error("Error funding wallet:", error);
+    } finally {
+      setFunding(false);
+    }
+  };
+
   return (
     <div className="mt-4">
       <div className="flex gap-4 mb-4">
@@ -93,50 +124,41 @@ export default function WalletList() {
                         {wallet.isAccountAbstracted ? "Yes" : "No"}
                       </p>
                     </div>
-                    <button
-                      onClick={() =>
-                        setExpandedWalletId(
-                          expandedWalletId === wallet.id ? null : wallet.id
-                        )
-                      }
-                      className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
-                    >
-                      {expandedWalletId === wallet.id
-                        ? "Hide Assets"
-                        : "Show Assets"}
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleFund(wallet.id)}
+                        disabled={funding}
+                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
+                      >
+                        {funding ? "Funding..." : "Fund MXNB"}
+                      </button>
+                      <button
+                        onClick={() =>
+                          setExpandedWalletId(
+                            expandedWalletId === wallet.id ? null : wallet.id
+                          )
+                        }
+                        className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                      >
+                        {expandedWalletId === wallet.id
+                          ? "Hide Assets"
+                          : "Show Assets"}
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="mt-2 space-y-1">
-                    <h3 className="font-semibold">Blockchain Addresses:</h3>
+                  <div className="mt-2">
                     {wallet.metadata.namespaces.eip155 && (
                       <p className="font-mono text-sm">
-                        Ethereum: {wallet.metadata.namespaces.eip155.address}
-                      </p>
-                    )}
-                    {wallet.metadata.namespaces.solana && (
-                      <p className="font-mono text-sm">
-                        Solana: {wallet.metadata.namespaces.solana.address}
-                      </p>
-                    )}
-                    {wallet.metadata.namespaces.tron && (
-                      <p className="font-mono text-sm">
-                        Tron: {wallet.metadata.namespaces.tron.address}
-                      </p>
-                    )}
-                    {wallet.metadata.namespaces.stellar && (
-                      <p className="font-mono text-sm">
-                        Stellar: {wallet.metadata.namespaces.stellar.address}
+                        Address:{" "}
+                        {wallet.metadata.namespaces.eip155.address}
                       </p>
                     )}
                   </div>
 
                   {expandedWalletId === wallet.id && (
                     <div className="mt-4 pt-4 border-t">
-                      <WalletAssets
-                        walletId={wallet.id}
-                        chainId="eip155:1" // Default to Ethereum mainnet, could be made configurable
-                      />
+                      <WalletAssets walletId={wallet.id} />
                     </div>
                   )}
                 </div>

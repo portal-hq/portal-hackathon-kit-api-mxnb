@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { WalletAssets } from "@/types/api";
-import { CHAINS } from "@/types/api";
+import { CHAIN_CONFIGS } from "@/lib/chains";
 
 // Helper function to determine curve type based on chain
 function getCurveForChain(chainId: string): "SECP256K1" | "ED25519" {
@@ -18,7 +18,6 @@ function getCurveForChain(chainId: string): "SECP256K1" | "ED25519" {
 
 interface WalletAssetsProps {
   walletId: string;
-  chainId?: string;
 }
 
 interface TransferModalProps {
@@ -119,17 +118,12 @@ function TransferModal({
   );
 }
 
-export default function WalletAssets({
-  walletId,
-  chainId: initialChainId,
-}: WalletAssetsProps) {
+export default function WalletAssets({ walletId }: WalletAssetsProps) {
   const [assets, setAssets] = useState<WalletAssets | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedChain, setSelectedChain] = useState<string>(
-    initialChainId ||
-      CHAINS.find((c) => c.id === "ethereum")?.chainId ||
-      CHAINS[0].chainId
+    CHAIN_CONFIGS[1].chainId
   );
   const [transferModal, setTransferModal] = useState<{
     isOpen: boolean;
@@ -229,13 +223,11 @@ export default function WalletAssets({
           onChange={(e) => setSelectedChain(e.target.value)}
           className="px-3 py-2 border rounded bg-white dark:bg-gray-800"
         >
-          {[...CHAINS]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((chain) => (
-              <option key={chain.id} value={chain.chainId}>
-                {chain.name}
-              </option>
-            ))}
+          {CHAIN_CONFIGS.map((chain) => (
+            <option key={chain.id} value={chain.chainId}>
+              {chain.name}
+            </option>
+          ))}
         </select>
         <button
           onClick={fetchAssets}
